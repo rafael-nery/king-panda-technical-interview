@@ -1,0 +1,27 @@
+# <type>: <subject> (max 50 chars)
+
+# <body> (optional, max 72 chars per line)
+# Explain what and why (not how)
+
+# <footer> (optional)
+# Closes: #issue
+# Breaking change: description
+
+# Types:
+# feat:     New feature
+# fix:      Bug fix
+# docs:     Documentation only
+# style:    Formatting, missing semicolons, etc
+# refactor: Code change that neither fixes a bug nor adds a feature
+# test:     Adding missing tests
+# chore:    Maintain. Update build tasks, package manager configs, etc
+# perf:     Performance improvements
+# ci:       CI/CD related changes
+
+# Example:
+# feat: add suspend endpoint for bet odds management
+#
+# Implements ability to temporarily suspend betting odds
+# with reason tracking for audit purposes
+#
+# Closes: #123

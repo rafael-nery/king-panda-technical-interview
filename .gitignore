@@ -1,16 +1,59 @@
+# IDE
 .idea/*
 !.idea/runConfigurations
-/Dockerfile
+.vscode/
+*.swp
+*.swo
+.phpstorm.meta.php
+_ide_helper.php
+
+# Dependencies
+vendor/
+node_modules/
 composer.lock
-vendor
-/src/*.db
-node_modules
-.mysql
-.phpunit.result.cache
-TODO
 
-thunder-tests
-
-.secrets
+# Environment
 .env
+.env.local
+.env.*.local
+config/config-local.php
+.secrets
+
+# Logs
+*.log
+logs/
+storage/logs/
+
+# Cache and temporary files
+.phpunit.result.cache
+.phpunit.cache/
+cache/
+tmp/
+temp/
+
+# OS
+.DS_Store
+Thumbs.db
+*.bak
+
+# Docker volumes
+docker/data/
+mysql-data/
+.mysql
+
+# Build artifacts
+build/
+dist/
+/Dockerfile
+
+# Testing
+coverage/
+phpunit.xml
+/src/*.db
+
+# Project specific
+/public/docs/openapi.json.cache
+PROJECT_IMPLEMENTATION_PLAN.md
+TODO
 ignore.txt
+thunder-tests
