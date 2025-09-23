@@ -32,6 +32,8 @@ use RestReferenceArchitecture\Psr11;
 use RestReferenceArchitecture\Repository\DummyHexRepository;
 use RestReferenceArchitecture\Repository\DummyRepository;
 use RestReferenceArchitecture\Repository\ExampleCrudRepository;
+use RestReferenceArchitecture\Repository\BetOddsRepository;
+use RestReferenceArchitecture\Repository\BetsRepository;
 use RestReferenceArchitecture\Repository\UserDefinition as UserDefinitionAlias;
 
 return [
@@ -80,6 +82,14 @@ return [
         ->toSingleton(),
 
     ExampleCrudRepository::class => DI::bind(ExampleCrudRepository::class)
+        ->withInjectedConstructor()
+        ->toSingleton(),
+
+    BetOddsRepository::class => DI::bind(BetOddsRepository::class)
+        ->withInjectedConstructor()
+        ->toSingleton(),
+
+    BetsRepository::class => DI::bind(BetsRepository::class)
         ->withInjectedConstructor()
         ->toSingleton(),
 
