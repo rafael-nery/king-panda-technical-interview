@@ -1,7 +1,7 @@
 create table bets
 (
     id int auto_increment not null primary key,
-    user_id int not null,
+    user_id binary(16) not null,
     bet_odds_id int not null,
     stake decimal(10,2) not null,
     potential_return decimal(10,2) not null,
