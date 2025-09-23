@@ -23,14 +23,14 @@ class BetOddsTest extends BaseApiTestCase
     {
         $sample = [
 
-            'eventName' => 'eventName',
-            'eventDate' => 'eventDate',
-            'marketType' => 'marketType',
-            'selection' => 'selection',
-            'odds' => 1.1,
-            'status' => 'status',
-            'createdAt' => 'createdAt',
-            'updatedAt' => 'updatedAt',
+            'eventName' => 'Flamengo vs Vasco',
+            'eventDate' => '2025-10-01 19:00:00',
+            'marketType' => '1X2',
+            'selection' => 'Home',
+            'odds' => 1.85,
+            'status' => 'active',
+            'createdAt' => '2025-09-23 12:00:00',
+            'updatedAt' => '2025-09-23 12:00:00',
         ];
 
         if ($array) {

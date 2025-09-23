@@ -23,13 +23,13 @@ class BetsTest extends BaseApiTestCase
     {
         $sample = [
 
-            'userId' => 'userId',
+            'userId' => hex2bin('CE5B83B298B911F0BBB48EE16CFF04A5'),
             'betOddsId' => 1,
-            'stake' => 1.1,
-            'potentialReturn' => 1.1,
-            'status' => 'status',
-            'placedAt' => 'placedAt',
-            'settledAt' => 'settledAt',
+            'stake' => 50.00,
+            'potentialReturn' => 92.50,
+            'status' => 'pending',
+            'placedAt' => '2025-09-23 12:00:00',
+            'settledAt' => null,
         ];
 
         if ($array) {
