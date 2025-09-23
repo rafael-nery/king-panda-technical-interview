@@ -22,8 +22,6 @@ class BetsTest extends BaseApiTestCase
     protected function getSampleData($array = false)
     {
         $sample = [
-
-            'userId' => hex2bin('CE5B83B298B911F0BBB48EE16CFF04A5'),
             'betOddsId' => 1,
             'stake' => 50.00,
             'potentialReturn' => 92.50,
@@ -33,9 +31,13 @@ class BetsTest extends BaseApiTestCase
         ];
 
         if ($array) {
+            // For JSON serialization, keep userId as hex string
+            $sample['userId'] = 'CE5B83B298B911F0BBB48EE16CFF04A5';
             return $sample;
         }
 
+        // For object, use binary format
+        $sample['userId'] = hex2bin('CE5B83B298B911F0BBB48EE16CFF04A5');
         ObjectCopy::copy($sample, $model = new Bets());
         return $model;
     }
