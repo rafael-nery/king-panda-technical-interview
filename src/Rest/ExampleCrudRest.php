@@ -303,4 +303,90 @@ class ExampleCrudRest
         $exampleCrudRepo->save($model);
     }
 
+    /**
+     * Custom method to update only the status of an ExampleCrud record
+     *
+     * @param HttpResponse $response
+     * @param HttpRequest $request
+     * @return void
+     * @throws Error401Exception
+     * @throws Error404Exception
+     * @throws ConfigException
+     * @throws ConfigNotFoundException
+     * @throws DependencyInjectionException
+     * @throws InvalidDateException
+     * @throws KeyNotFoundException
+     * @throws InvalidArgumentException
+     * @throws OrmBeforeInvalidException
+     * @throws OrmInvalidFieldsException
+     * @throws Error400Exception
+     * @throws Error403Exception
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws ReflectionException
+     */
+    #[OA\Put(
+        path: "/example/crud/status",
+        security: [["jwt-token" => []]],
+        tags: ["Example"],
+        description: "Update the status of the ExampleCrud"
+    )]
+    #[OA\RequestBody(
+        description: "The status to be updated",
+        required: true,
+        content: new OA\JsonContent(
+            required: ["id", "status"],
+            properties: [
+                new OA\Property(property: "id", type: "integer", format: "int32"),
+                new OA\Property(property: "status", type: "string", maxLength: 10)
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 200,
+        description: "The operation result",
+        content: new OA\JsonContent(
+            required: ["result"],
+            properties: [
+                new OA\Property(property: "result", type: "string")
+            ]
+        )
+    )]
+    #[OA\Response(
+        response: 401,
+        description: "Not Authorized",
+        content: new OA\JsonContent(ref: "#/components/schemas/error")
+    )]
+    #[OA\Response(
+        response: 404,
+        description: "Record not found",
+        content: new OA\JsonContent(ref: "#/components/schemas/error")
+    )]
+    public function putExampleCrudStatus(HttpResponse $response, HttpRequest $request): void
+    {
+        // Secure the endpoint - require admin role
+        JwtContext::requireRole($request, User::ROLE_ADMIN);
+
+        // Validate request payload
+        $payload = OpenApiContext::validateRequest($request);
+
+        // Get the repository and find the record
+        $exampleCrudRepo = Psr11::get(ExampleCrudRepository::class);
+        $model = $exampleCrudRepo->get($payload["id"]);
+
+        // Check if record exists
+        if (!$model) {
+            throw new Error404Exception("Record not found");
+        }
+
+        // Update only the status field
+        $model->setStatus($payload["status"]);
+        $exampleCrudRepo->save($model);
+
+        // Return success response
+        $response->write([
+            "result" => "Status updated successfully"
+        ]);
+    }
+
 }
