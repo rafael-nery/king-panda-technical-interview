@@ -203,4 +203,65 @@ class ExampleCrudTest extends BaseApiTestCase
         ;
         $this->assertRequest($request);
     }
+
+    public function testUpdateStatusOnly()
+    {
+        // First, login as admin
+        $result = json_decode($this->assertRequest(Credentials::requestLogin(Credentials::getAdminUser()))->getBody()->getContents(), true);
+
+        // Create a new record
+        $request = new FakeApiRequester();
+        $request
+            ->withPsr7Request($this->getPsr7Request())
+            ->withMethod('POST')
+            ->withPath("/example/crud")
+            ->withRequestBody(json_encode($this->getSampleData(true)))
+            ->assertResponseCode(200)
+            ->withRequestHeader([
+                "Authorization" => "Bearer " . $result['token']
+            ])
+        ;
+        $body = $this->assertRequest($request);
+        $bodyAr = json_decode($body->getBody()->getContents(), true);
+        $id = $bodyAr['id'];
+
+        // Now update only the status using the custom method
+        $request = new FakeApiRequester();
+        $request
+            ->withPsr7Request($this->getPsr7Request())
+            ->withMethod('PUT')
+            ->withPath("/example/crud/status")
+            ->withRequestBody(json_encode([
+                'id' => $id,
+                'status' => 'inactive'
+            ]))
+            ->assertResponseCode(200)
+            ->withRequestHeader([
+                "Authorization" => "Bearer " . $result['token']
+            ])
+        ;
+        $body = $this->assertRequest($request);
+        $bodyAr = json_decode($body->getBody()->getContents(), true);
+
+        // Assert the response
+        $this->assertEquals('Status updated successfully', $bodyAr['result']);
+
+        // Verify the status was updated by fetching the record
+        $request = new FakeApiRequester();
+        $request
+            ->withPsr7Request($this->getPsr7Request())
+            ->withMethod('GET')
+            ->withPath("/example/crud/" . $id)
+            ->assertResponseCode(200)
+            ->withRequestHeader([
+                "Authorization" => "Bearer " . $result['token']
+            ])
+        ;
+        $body = $this->assertRequest($request);
+        $bodyAr = json_decode($body->getBody()->getContents(), true);
+
+        // Check that status was updated but other fields remain the same
+        $this->assertEquals('inactive', $bodyAr['status']);
+        $this->assertEquals('name', $bodyAr['name']);
+    }
 }
