@@ -623,6 +623,11 @@
                                         "type": "integer",
                                         "format": "int32",
                                         "nullable": true
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "nullable": true
                                     }
                                 },
                                 "type": "object"
@@ -1166,6 +1171,11 @@
                     "code": {
                         "type": "integer",
                         "format": "int32",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "format": "string",
                         "nullable": true
                     }
                 },
