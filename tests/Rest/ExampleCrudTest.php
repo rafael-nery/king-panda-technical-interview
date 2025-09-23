@@ -26,6 +26,7 @@ class ExampleCrudTest extends BaseApiTestCase
             'name' => 'name',
             'birthdate' => '2023-01-01 00:00:00',
             'code' => 1,
+            'status' => 'active',
         ];
 
         if ($array) {

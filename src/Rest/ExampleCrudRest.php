@@ -207,7 +207,8 @@ class ExampleCrudRest
 
                 new OA\Property(property: "name", type: "string", format: "string"),
                 new OA\Property(property: "birthdate", type: "string", format: "date-time", nullable: true),
-                new OA\Property(property: "code", type: "integer", format: "int32", nullable: true)
+                new OA\Property(property: "code", type: "integer", format: "int32", nullable: true),
+                new OA\Property(property: "status", type: "string", format: "string", nullable: true)
             ]
         )
     )]
