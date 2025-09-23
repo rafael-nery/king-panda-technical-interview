@@ -24,7 +24,7 @@ class ExampleCrudTest extends BaseApiTestCase
         $sample = [
 
             'name' => 'name',
-            'birthdate' => 'birthdate',
+            'birthdate' => '2023-01-01 00:00:00',
             'code' => 1,
         ];
 
