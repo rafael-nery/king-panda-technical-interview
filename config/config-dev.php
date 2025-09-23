@@ -31,6 +31,7 @@ use RestReferenceArchitecture\Model\User;
 use RestReferenceArchitecture\Psr11;
 use RestReferenceArchitecture\Repository\DummyHexRepository;
 use RestReferenceArchitecture\Repository\DummyRepository;
+use RestReferenceArchitecture\Repository\ExampleCrudRepository;
 use RestReferenceArchitecture\Repository\UserDefinition as UserDefinitionAlias;
 
 return [
@@ -75,6 +76,10 @@ return [
         ->toSingleton(),
 
     DummyHexRepository::class => DI::bind(DummyHexRepository::class)
+        ->withInjectedConstructor()
+        ->toSingleton(),
+
+    ExampleCrudRepository::class => DI::bind(ExampleCrudRepository::class)
         ->withInjectedConstructor()
         ->toSingleton(),
 
