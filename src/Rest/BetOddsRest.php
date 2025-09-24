@@ -336,7 +336,7 @@ class BetOddsRest
     )]
     public function getActive(HttpResponse $response, HttpRequest $request): array
     {
-        $this->checkAuthorization($request);
+        JwtContext::requireAuthenticated($request);
 
         $betOddsRepo = Psr11::get(BetOddsRepository::class);
         $result = $betOddsRepo->getByField('status', 'active');
@@ -347,7 +347,6 @@ class BetOddsRest
     /**
      * @param HttpResponse $response
      * @param HttpRequest $request
-     * @param int $id
      * @return array
      * @throws Error404Exception
      * @throws \ByJG\RestServer\Exception\Error401Exception
@@ -387,10 +386,11 @@ class BetOddsRest
             new OA\Response(response: 404, description: "Odd not found")
         ]
     )]
-    public function suspend(HttpResponse $response, HttpRequest $request, int $id): array
+    public function suspend(HttpResponse $response, HttpRequest $request): array
     {
-        $this->checkAuthorization($request, self::ROLE_ADMIN);
+        JwtContext::requireRole($request, User::ROLE_ADMIN);
 
+        $id = $request->param('id');
         $betOddsRepo = Psr11::get(BetOddsRepository::class);
         $model = $betOddsRepo->getById($id);
 

@@ -23,7 +23,7 @@ use RestReferenceArchitecture\Model\Bets;
 use RestReferenceArchitecture\Psr11;
 use RestReferenceArchitecture\Repository\BetsRepository;
 use RestReferenceArchitecture\Model\User;
-use RestReferenceArchitecture\Util\HexUuidLiteral;
+use ByJG\MicroOrm\Literal\HexUuidLiteral;
 use RestReferenceArchitecture\Util\JwtContext;
 use RestReferenceArchitecture\Util\OpenApiContext;
 
