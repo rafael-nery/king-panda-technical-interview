@@ -317,7 +317,23 @@ class BetOddsRest
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \ReflectionException
      */
-    #[Route(method: "GET", path: "/bet/odds/active")]
+    #[OA\Get(
+        path: "/bet/odds/active",
+        security: [["jwt-token" => []]],
+        tags: ["BetOdds"],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "List active odds",
+                content: new OA\JsonContent(
+                    type: "array",
+                    items: new OA\Items(ref: "#/components/schemas/BetOdds")
+                )
+            ),
+            new OA\Response(response: 401, description: "Unauthorized"),
+            new OA\Response(response: 403, description: "Forbidden")
+        ]
+    )]
     public function getActive(HttpResponse $response, HttpRequest $request): array
     {
         $this->checkAuthorization($request);
@@ -340,7 +356,37 @@ class BetOddsRest
      * @throws \Psr\SimpleCache\InvalidArgumentException
      * @throws \ReflectionException
      */
-    #[Route(method: "PUT", path: "/bet/odds/{id}/suspend")]
+    #[OA\Put(
+        path: "/bet/odds/{id}/suspend",
+        security: [["jwt-token" => []]],
+        tags: ["BetOdds"],
+        parameters: [
+            new OA\Parameter(
+                name: "id",
+                in: "path",
+                required: true,
+                schema: new OA\Schema(type: "integer")
+            )
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "Odd suspended successfully",
+                content: new OA\JsonContent(
+                    type: "object",
+                    properties: [
+                        new OA\Property(property: "id", type: "integer"),
+                        new OA\Property(property: "event_name", type: "string"),
+                        new OA\Property(property: "status", type: "string"),
+                        new OA\Property(property: "message", type: "string")
+                    ]
+                )
+            ),
+            new OA\Response(response: 401, description: "Unauthorized"),
+            new OA\Response(response: 403, description: "Insufficient privileges"),
+            new OA\Response(response: 404, description: "Odd not found")
+        ]
+    )]
     public function suspend(HttpResponse $response, HttpRequest $request, int $id): array
     {
         $this->checkAuthorization($request, self::ROLE_ADMIN);

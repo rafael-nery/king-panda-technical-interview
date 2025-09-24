@@ -263,6 +263,98 @@
                 ]
             }
         },
+        "/bet/odds/active": {
+            "get": {
+                "tags": [
+                    "BetOdds"
+                ],
+                "operationId": "GET::/bet/odds/active::RestReferenceArchitecture\\Rest\\BetOddsRest::getActive",
+                "responses": {
+                    "200": {
+                        "description": "List active odds",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/BetOdds"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "jwt-token": []
+                    }
+                ]
+            }
+        },
+        "/bet/odds/{id}/suspend": {
+            "put": {
+                "tags": [
+                    "BetOdds"
+                ],
+                "operationId": "PUT::/bet/odds/{id}/suspend::RestReferenceArchitecture\\Rest\\BetOddsRest::suspend",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Odd suspended successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "event_name": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Insufficient privileges"
+                    },
+                    "404": {
+                        "description": "Odd not found"
+                    }
+                },
+                "security": [
+                    {
+                        "jwt-token": []
+                    }
+                ]
+            }
+        },
         "/bets/{id}": {
             "get": {
                 "tags": [
@@ -499,6 +591,40 @@
                                 }
                             }
                         }
+                    }
+                },
+                "security": [
+                    {
+                        "jwt-token": []
+                    }
+                ]
+            }
+        },
+        "/my/bets": {
+            "get": {
+                "tags": [
+                    "Bets"
+                ],
+                "operationId": "GET::/my/bets::RestReferenceArchitecture\\Rest\\BetsRest::getMyBets",
+                "responses": {
+                    "200": {
+                        "description": "List user's bets",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Bets"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 },
                 "security": [
@@ -1952,6 +2078,10 @@
         {
             "name": "Bet",
             "description": "Bet"
+        },
+        {
+            "name": "BetOdds",
+            "description": "BetOdds"
         },
         {
             "name": "Bets",
