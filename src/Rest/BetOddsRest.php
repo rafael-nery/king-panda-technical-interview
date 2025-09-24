@@ -339,7 +339,7 @@ class BetOddsRest
         JwtContext::requireAuthenticated($request);
 
         $betOddsRepo = Psr11::get(BetOddsRepository::class);
-        $result = $betOddsRepo->getByField('status', 'active');
+        $result = $betOddsRepo->getByStatus('active');
 
         return $result;
     }
@@ -392,7 +392,7 @@ class BetOddsRest
 
         $id = $request->param('id');
         $betOddsRepo = Psr11::get(BetOddsRepository::class);
-        $model = $betOddsRepo->getById($id);
+        $model = $betOddsRepo->get($id);
 
         if (empty($model)) {
             throw new Error404Exception('Odd not found');
