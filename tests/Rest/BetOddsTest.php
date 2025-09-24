@@ -207,4 +207,77 @@ class BetOddsTest extends BaseApiTestCase
         ;
         $this->assertRequest($request);
     }
+
+    public function testGetActiveOdds()
+    {
+        $result = json_decode($this->assertRequest(Credentials::requestLogin(Credentials::getRegularUser()))->getBody()->getContents(), true);
+
+        $request = new FakeApiRequester();
+        $request
+            ->withPsr7Request($this->getPsr7Request())
+            ->withMethod('GET')
+            ->withPath("/bet/odds/active")
+            ->assertResponseCode(200)
+            ->withRequestHeader([
+                "Authorization" => "Bearer " . $result['token']
+            ])
+        ;
+        $this->assertRequest($request);
+    }
+
+    public function testSuspendOddAsAdmin()
+    {
+        // First create an odd
+        $result = json_decode($this->assertRequest(Credentials::requestLogin(Credentials::getAdminUser()))->getBody()->getContents(), true);
+
+        $request = new FakeApiRequester();
+        $request
+            ->withPsr7Request($this->getPsr7Request())
+            ->withMethod('POST')
+            ->withPath("/bet/odds")
+            ->withRequestBody(json_encode($this->getSampleData(true)))
+            ->assertResponseCode(200)
+            ->withRequestHeader([
+                "Authorization" => "Bearer " . $result['token']
+            ])
+        ;
+        $body = $this->assertRequest($request);
+        $bodyAr = json_decode($body->getBody()->getContents(), true);
+
+        // Then suspend it
+        $request = new FakeApiRequester();
+        $request
+            ->withPsr7Request($this->getPsr7Request())
+            ->withMethod('PUT')
+            ->withPath("/bet/odds/" . $bodyAr['id'] . "/suspend")
+            ->assertResponseCode(200)
+            ->withRequestHeader([
+                "Authorization" => "Bearer " . $result['token']
+            ])
+        ;
+        $suspendResponse = $this->assertRequest($request);
+        $suspendData = json_decode($suspendResponse->getBody()->getContents(), true);
+
+        $this->assertEquals('suspended', $suspendData['status']);
+    }
+
+    public function testSuspendOddAsUserForbidden()
+    {
+        $this->expectException(Error403Exception::class);
+        $this->expectExceptionMessage('Insufficient privileges');
+
+        $result = json_decode($this->assertRequest(Credentials::requestLogin(Credentials::getRegularUser()))->getBody()->getContents(), true);
+
+        $request = new FakeApiRequester();
+        $request
+            ->withPsr7Request($this->getPsr7Request())
+            ->withMethod('PUT')
+            ->withPath("/bet/odds/1/suspend")
+            ->assertResponseCode(403)
+            ->withRequestHeader([
+                "Authorization" => "Bearer " . $result['token']
+            ])
+        ;
+        $this->assertRequest($request);
+    }
 }

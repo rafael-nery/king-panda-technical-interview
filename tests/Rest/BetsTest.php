@@ -208,4 +208,36 @@ class BetsTest extends BaseApiTestCase
         ;
         $this->assertRequest($request);
     }
+
+    public function testGetMyBets()
+    {
+        $result = json_decode($this->assertRequest(Credentials::requestLogin(Credentials::getRegularUser()))->getBody()->getContents(), true);
+
+        $request = new FakeApiRequester();
+        $request
+            ->withPsr7Request($this->getPsr7Request())
+            ->withMethod('GET')
+            ->withPath("/my/bets")
+            ->assertResponseCode(200)
+            ->withRequestHeader([
+                "Authorization" => "Bearer " . $result['token']
+            ])
+        ;
+        $this->assertRequest($request);
+    }
+
+    public function testGetMyBetsUnauthorized()
+    {
+        $this->expectException(Error401Exception::class);
+        $this->expectExceptionMessage('Absent authorization token');
+
+        $request = new FakeApiRequester();
+        $request
+            ->withPsr7Request($this->getPsr7Request())
+            ->withMethod('GET')
+            ->withPath("/my/bets")
+            ->assertResponseCode(401)
+        ;
+        $this->assertRequest($request);
+    }
 }
