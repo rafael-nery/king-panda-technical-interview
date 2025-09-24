@@ -307,4 +307,60 @@ class BetOddsRest
         $betOddsRepo->save($model);
     }
 
+    /**
+     * @param HttpResponse $response
+     * @param HttpRequest $request
+     * @return array
+     * @throws \ByJG\RestServer\Exception\Error401Exception
+     * @throws \ByJG\RestServer\Exception\Error403Exception
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \ReflectionException
+     */
+    #[Route(method: "GET", path: "/bet/odds/active")]
+    public function getActive(HttpResponse $response, HttpRequest $request): array
+    {
+        $this->checkAuthorization($request);
+
+        $betOddsRepo = Psr11::get(BetOddsRepository::class);
+        $result = $betOddsRepo->getByField('status', 'active');
+
+        return $result;
+    }
+
+    /**
+     * @param HttpResponse $response
+     * @param HttpRequest $request
+     * @param int $id
+     * @return array
+     * @throws Error404Exception
+     * @throws \ByJG\RestServer\Exception\Error401Exception
+     * @throws \ByJG\RestServer\Exception\Error403Exception
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \ReflectionException
+     */
+    #[Route(method: "PUT", path: "/bet/odds/{id}/suspend")]
+    public function suspend(HttpResponse $response, HttpRequest $request, int $id): array
+    {
+        $this->checkAuthorization($request, self::ROLE_ADMIN);
+
+        $betOddsRepo = Psr11::get(BetOddsRepository::class);
+        $model = $betOddsRepo->getById($id);
+
+        if (empty($model)) {
+            throw new Error404Exception('Odd not found');
+        }
+
+        $model->setStatus('suspended');
+        $betOddsRepo->save($model);
+
+        return [
+            'id' => $model->getId(),
+            'event_name' => $model->getEventName(),
+            'status' => $model->getStatus(),
+            'message' => 'Odd suspended successfully'
+        ];
+    }
+
 }

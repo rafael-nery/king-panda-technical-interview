@@ -23,6 +23,7 @@ use RestReferenceArchitecture\Model\Bets;
 use RestReferenceArchitecture\Psr11;
 use RestReferenceArchitecture\Repository\BetsRepository;
 use RestReferenceArchitecture\Model\User;
+use RestReferenceArchitecture\Util\HexUuidLiteral;
 use RestReferenceArchitecture\Util\JwtContext;
 use RestReferenceArchitecture\Util\OpenApiContext;
 
@@ -304,6 +305,46 @@ class BetsRest
         ObjectCopy::copy($payload, $model);
 
         $betsRepo->save($model);
+    }
+
+    /**
+     * @param HttpResponse $response
+     * @param HttpRequest $request
+     * @return array
+     * @throws Error401Exception
+     * @throws Error403Exception
+     * @throws \ByJG\Serializer\Exception\InvalidArgumentException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws ReflectionException
+     */
+    #[OA\Get(
+        path: "/my/bets",
+        security: [["jwt-token" => []]],
+        tags: ["Bets"],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: "List user's bets",
+                content: new OA\JsonContent(
+                    type: "array",
+                    items: new OA\Items(ref: "#/components/schemas/Bets")
+                )
+            ),
+            new OA\Response(response: 401, description: "Unauthorized"),
+            new OA\Response(response: 403, description: "Forbidden")
+        ]
+    )]
+    public function getMyBets(HttpResponse $response, HttpRequest $request): array
+    {
+        JwtContext::requireAuthenticated($request);
+
+        // Get user ID from JWT token
+        $userId = new HexUuidLiteral(JwtContext::getUserId());
+
+        $betsRepo = Psr11::get(BetsRepository::class);
+        $result = $betsRepo->getByUserId($userId);
+
+        return $result;
     }
 
 }
