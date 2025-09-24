@@ -1,81 +1,249 @@
-# Reference Architecture project for RESTFul services in PHP
+# 🎰 KingPanda BET - Sistema de Gerenciamento de Apostas
 
-[![Build Status](https://github.com/byjg/php-rest-template/actions/workflows/build-app-image.yml/badge.svg?branch=master)](https://github.com/byjg/php-rest-template/actions/workflows/build-app-image.yml)
-[![Opensource ByJG](https://img.shields.io/badge/opensource-byjg-success.svg)](http://opensource.byjg.com)
-[![GitHub source](https://img.shields.io/badge/Github-source-informational?logo=github)](https://github.com/byjg/php-rest-template/)
-[![GitHub license](https://img.shields.io/github/license/byjg/php-rest-template.svg)](https://opensource.byjg.com/opensource/licensing.html)
-[![GitHub release](https://img.shields.io/github/release/byjg/php-rest-template.svg)](https://github.com/byjg/php-rest-template/releases/)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/byjg/php-rest-template/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/byjg/php-rest-template/?branch=master)
+[![PHP](https://img.shields.io/badge/PHP-8.1+-blue.svg)](https://www.php.net)
+[![Docker](https://img.shields.io/badge/Docker-Ready-green.svg)](https://www.docker.com)
+[![Tests](https://img.shields.io/badge/Tests-58%20passing-success.svg)](tests/)
+[![OpenAPI](https://img.shields.io/badge/OpenAPI-3.0-orange.svg)](public/docs/openapi.json)
 
-This project is a boilerplate for create Rest Applications API Ready to Use with the best techniques to improve your productivity.
+Sistema de gerenciamento de apostas esportivas desenvolvido para demonstração técnica, utilizando PHP REST Reference Architecture com Clean Architecture e Domain-Driven Design.
 
-## What is a PHP Rest Template?
+## 📋 Visão Geral
 
-```mermaid
-mindmap
-  (("Reference Architecture"))
-    ("PSR Standards")
-      ("WebRequests")
-      ("Container & Dependency Injection")
-      ("Cache")
-    ("Authentication & Authorization")
-    ("Decoupled Code")
-    ("Database")
-      ("ORM Integration")
-      ("Migration")
-      ("Routing")
-    ("OpenAPI Integration")
-      ("Rest Methods")
-      ("Contract Testing")
-      ("Documentation")
-    ("Error Handling")
+Este projeto demonstra a implementação profissional de uma API REST para sistema de apostas, desenvolvido seguindo as melhores práticas de arquitetura e desenvolvimento.
+
+### 🚀 Tecnologias Utilizadas
+
+- **Framework**: [PHP REST Reference Architecture](https://github.com/byjg/php-rest-reference-architecture) (byjg)
+- **Linguagem**: PHP 8.1+
+- **Banco de Dados**: MySQL 8.0
+- **Containerização**: Docker & Docker Compose
+- **Autenticação**: JWT com roles (user/admin)
+- **Testes**: PHPUnit (58 testes automatizados)
+- **Documentação**: OpenAPI 3.0 / Swagger UI
+- **Versionamento**: Git Flow + Conventional Commits
+
+## 🏗️ Arquitetura
+
+O projeto segue Clean Architecture com separação clara de responsabilidades:
+
+```
+src/
+├── Model/          # Entidades de domínio
+├── Repository/     # Camada de acesso a dados
+├── Rest/           # Controllers REST
+└── Util/           # Utilitários e helpers
+
+db/
+├── migrations/     # Versionamento do banco
+│   ├── up/        # Aplicar mudanças
+│   └── down/      # Reverter mudanças
+
+tests/
+└── Rest/          # Testes de integração
 ```
 
-It is a PHP-based RESTful API template or boilerplate that aims to simplify the development process of RESTful web services in PHP.
-It provides a foundation or starting point for building APIs following REST architectural principles.
+## 🎲 Funcionalidades Implementadas
 
-Using this PHP Rest Reference Architecture you can focus on the business logic of your application and not in the infrastructure as for example:
+### Sistema de Apostas Completo
 
-- Rapid Development: By offering a pre-defined structure and essential components, the template can expedite the process of building RESTful APIs in PHP.
-- Standardization: The template promotes consistency and adherence to RESTful design principles, making it easier for developers to understand and collaborate on the codebase.
-- Customizable: Developers can modify and extend the template to fit their specific requirements, allowing for flexibility in implementing additional features or business logic.
+#### 1. **Gerenciamento de Cotações (bet_odds)**
+- CRUD completo de cotações
+- Filtro de cotações ativas
+- Suspensão de cotações (admin)
 
-Key features and components:
+#### 2. **Gerenciamento de Apostas (bets)**
+- CRUD completo de apostas
+- Visualização de apostas do usuário
+- Histórico personalizado
 
-- Uses [OpenAPI](https://swagger.io/specification/) specification for API documentation and endpoint creation.
-- Routing: Includes a routing system that helps map incoming HTTP requests to specific API endpoints or resources.
-- Middleware: It allows developers to add custom logic or perform operations before and after the request is processed.
-- Handling: The project offer utilities to handle and parse incoming requests, extract parameters, and handle request methods (GET, POST, PUT, DELETE, etc.).
-- Response Formatting: It provides mechanisms to format and structure API responses, including JSON serialization, error handling, and status codes.
-- Authentication and Authorization: The template include support for implementing authentication and authorization mechanisms to secure API endpoints using JWT.
-- Database Integration: It offers integration for connecting to databases, executing queries, and managing data persistence.
-- Error Handling: The project include error handling mechanisms to properly handle and format error responses.
-- Dependency Injection: It includes support for dependency injection and inversion of control (IoC) containers.
-- Testing: It includes support for testing the API endpoints and resources, including unit testing and functional testing.
-- PHP Standards: PSR-7 (Http Message Interface), PSR-11 (Container), PSR-16 and PSR-6 (Cache Interface) and others.
+#### 3. **Endpoints Customizados**
+Além do CRUD básico gerado automaticamente, foram implementados:
+- `GET /bet/odds/active` - Lista apenas cotações ativas
+- `PUT /bet/odds/{id}/suspend` - Suspende uma cotação (admin)
+- `GET /my/bets` - Lista apostas do usuário autenticado
 
-This project is not a framework. It is a template that you can use to create your own project. You can use the template as a starting point for your own project and customize it to fit your specific requirements.
+## 🚀 Como Executar
 
-## Some Features Explained
+### Pré-requisitos
+- Docker e Docker Compose instalados
+- Git para clonar o repositório
 
-This project install the follow components (click on the link for more details):
+### 1. Clone o repositório
+```bash
+git clone https://github.com/rafael-nery/king-panda-technical-interview.git
+cd king-panda-technical-interview
+```
 
-- [Rest Methods API integrated with OpenAPI](docs/rest.md)
-- [Functional Unit Tests of your Rest Method API](docs/functional_test.md)
-- [PSR-11 Container and different environments](docs/psr11.md)
-- [Dependency Injection](docs/psr11_di.md)
-- [Login Integration with JWT](docs/login.md)
-- [Database Migration](docs/migration.md)
-- [Database ORM](docs/orm.md)
+### 2. Inicie os containers Docker
+```bash
+docker-compose -f docker-compose-dev.yml up -d
+```
 
-## Getting Started
+### 3. Execute as migrations
+```bash
+docker-compose -f docker-compose-dev.yml exec rest composer run migrate -- reset
+docker-compose -f docker-compose-dev.yml exec rest composer run migrate
+```
 
-Here some examples of how to use the template:
+### 4. Execute os testes
+```bash
+docker-compose -f docker-compose-dev.yml exec rest composer run test
+```
 
-- [Getting Started, Installing and create a new project](docs/getting_started.md)
-- [Add a new Table](docs/getting_started_01_create_table.md)
-- [Add a new Field](docs/getting_started_02_add_new_field.md)
-- [Add a new Rest Method](docs/getting_started_03_create_rest_method.md)
+### 5. Acesse a aplicação
+- **API**: http://localhost:8080
+- **Documentação Swagger**: http://localhost:8080/docs
 
-----
-[Open source ByJG](http://opensource.byjg.com)
+## 📡 Endpoints Principais
+
+### Autenticação
+```http
+POST /login
+{
+  "username": "admin@example.com",
+  "password": "!P4ssw0rdstr!"
+}
+```
+
+### Cotações (BetOdds)
+| Método | Endpoint | Descrição | Autenticação |
+|--------|----------|-----------|--------------|
+| GET | `/bet/odds` | Lista todas cotações | ✅ |
+| GET | `/bet/odds/{id}` | Busca cotação por ID | ✅ |
+| GET | `/bet/odds/active` | Lista cotações ativas | ✅ |
+| POST | `/bet/odds` | Cria nova cotação | Admin |
+| PUT | `/bet/odds` | Atualiza cotação | Admin |
+| PUT | `/bet/odds/{id}/suspend` | Suspende cotação | Admin |
+| DELETE | `/bet/odds/{id}` | Remove cotação | Admin |
+
+### Apostas (Bets)
+| Método | Endpoint | Descrição | Autenticação |
+|--------|----------|-----------|--------------|
+| GET | `/bets` | Lista todas apostas | ✅ |
+| GET | `/bets/{id}` | Busca aposta por ID | ✅ |
+| GET | `/my/bets` | Minhas apostas | ✅ |
+| POST | `/bets` | Cria nova aposta | Admin |
+| PUT | `/bets` | Atualiza aposta | Admin |
+| DELETE | `/bets/{id}` | Remove aposta | Admin |
+
+## 🧪 Testes
+
+O projeto possui **58 testes automatizados** cobrindo:
+- ✅ Autenticação e autorização
+- ✅ CRUD completo de todas entidades
+- ✅ Endpoints customizados
+- ✅ Validações e regras de negócio
+- ✅ Tratamento de erros
+
+Para executar os testes:
+```bash
+docker-compose -f docker-compose-dev.yml exec rest composer run test
+```
+
+## 📈 Estrutura do Banco de Dados
+
+### Tabela `bet_odds`
+```sql
+- id (INT, PK)
+- event_name (VARCHAR 255)
+- event_date (DATETIME)
+- market_type (VARCHAR 50)
+- selection (VARCHAR 100)
+- odds (DECIMAL 10,2)
+- status (VARCHAR 20)
+- created_at (DATETIME)
+- updated_at (DATETIME)
+```
+
+### Tabela `bets`
+```sql
+- id (INT, PK)
+- user_id (BINARY 16, FK)
+- bet_odds_id (INT, FK)
+- stake (DECIMAL 10,2)
+- potential_return (DECIMAL 10,2)
+- status (VARCHAR 20)
+- placed_at (DATETIME)
+- settled_at (DATETIME)
+```
+
+## 🔧 Scripts Disponíveis
+
+```bash
+# Executar testes
+composer run test
+
+# Executar migrations
+composer run migrate
+
+# Resetar banco
+composer run migrate -- reset
+
+# Gerar documentação OpenAPI
+composer run openapi
+
+# Gerar código (CRUD)
+composer run codegen
+```
+
+## 📚 Desenvolvimento
+
+### Processo de Desenvolvimento Seguido
+
+1. **Setup Inicial**: Configuração do ambiente Docker e estrutura base
+2. **Tutorial Completo**: Seguindo TUTORIAL_IMPLEMENTATION.md
+3. **Implementação do Sistema de Apostas**:
+   - Migrations para criação das tabelas
+   - Geração de CRUD com codegen
+   - Implementação de endpoints customizados
+   - Testes automatizados
+   - Documentação OpenAPI
+
+### Git Flow Utilizado
+
+```
+main
+ └── develop
+      ├── feature/example-crud-table
+      ├── feature/add-status-field
+      ├── feature/custom-status-endpoint
+      ├── feature/bet-odds-tables
+      └── feature/custom-betting-endpoints
+```
+
+### Conventional Commits
+
+Todos os commits seguem o padrão:
+- `feat:` Nova funcionalidade
+- `fix:` Correção de bug
+- `docs:` Documentação
+- `test:` Testes
+- `chore:` Tarefas de manutenção
+
+## 🎯 Diferenciais Técnicos Implementados
+
+- ✅ **Clean Architecture**: Separação clara de responsabilidades
+- ✅ **Database Migrations**: Versionamento completo do banco
+- ✅ **Code Generation**: Produtividade com codegen para CRUD básico
+- ✅ **Endpoints Customizados**: Além do CRUD automático
+- ✅ **Testes Automatizados**: 58 testes cobrindo toda aplicação
+- ✅ **Documentação OpenAPI**: Swagger completo e atualizado
+- ✅ **Docker Environment**: Ambiente containerizado
+- ✅ **Git Best Practices**: Conventional Commits e Git Flow
+- ✅ **JWT Authentication**: Com roles (user/admin)
+- ✅ **RESTful Design**: Seguindo princípios REST
+
+## 👨‍💻 Autor
+
+**Rafael Nery**
+- GitHub: [@rafael-nery](https://github.com/rafael-nery)
+- Projeto: Entrevista Técnica KingPanda BET
+- Data: Setembro 2025
+
+## 📝 Licença
+
+Este projeto foi desenvolvido como parte de um processo seletivo técnico.
+
+---
+
+💡 **Nota**: Este projeto demonstra proficiência em PHP REST development, Clean Architecture, testes automatizados e boas práticas de desenvolvimento.
