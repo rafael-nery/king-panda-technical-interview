@@ -160,10 +160,10 @@ class BetOddsRest
 
         $page = $request->get('page');
         $size = $request->get('size');
-        // $orderBy = $request->get('orderBy');
+        $orderBy = $request->get('orderBy') ?? 'event_date ASC, id ASC';
         // $filter = $request->get('filter');
 
-        $result = $repo->list($page, $size);
+        $result = $repo->list($page, $size, $orderBy);
         $response->write(
             $result
         );

@@ -33,7 +33,8 @@ class BetsRepository extends BaseRepository
     {
         $query = Query::getInstance()
             ->table('bets')
-            ->where('bets.user_id = :value', ['value' => $userId]);
+            ->where('bets.user_id = :value', ['value' => $userId])
+            ->orderBy(['bets.placed_at DESC']);
         $result = $this->repository->getByQuery($query);
         return $result;
     }
@@ -46,7 +47,8 @@ class BetsRepository extends BaseRepository
     {
         $query = Query::getInstance()
             ->table('bets')
-            ->where('bets.bet_odds_id = :value', ['value' => $betOddsId]);
+            ->where('bets.bet_odds_id = :value', ['value' => $betOddsId])
+            ->orderBy(['bets.placed_at DESC']);
         $result = $this->repository->getByQuery($query);
         return $result;
     }

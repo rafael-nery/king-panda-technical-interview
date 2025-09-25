@@ -33,7 +33,8 @@ class BetOddsRepository extends BaseRepository
     {
         $query = Query::getInstance()
             ->table('bet_odds')
-            ->where('bet_odds.event_date = :value', ['value' => $eventDate]);
+            ->where('bet_odds.event_date = :value', ['value' => $eventDate])
+            ->orderBy(['bet_odds.event_date ASC', 'bet_odds.id ASC']);
         $result = $this->repository->getByQuery($query);
         return $result;
     }
@@ -46,7 +47,8 @@ class BetOddsRepository extends BaseRepository
     {
         $query = Query::getInstance()
             ->table('bet_odds')
-            ->where('bet_odds.status = :value', ['value' => $status]);
+            ->where('bet_odds.status = :value', ['value' => $status])
+            ->orderBy(['bet_odds.event_date ASC', 'bet_odds.id ASC']);
         $result = $this->repository->getByQuery($query);
         return $result;
     }
@@ -59,7 +61,8 @@ class BetOddsRepository extends BaseRepository
     {
         $query = Query::getInstance()
             ->table('bet_odds')
-            ->where('bet_odds.market_type = :value', ['value' => $marketType]);
+            ->where('bet_odds.market_type = :value', ['value' => $marketType])
+            ->orderBy(['bet_odds.event_date ASC', 'bet_odds.id ASC']);
         $result = $this->repository->getByQuery($query);
         return $result;
     }

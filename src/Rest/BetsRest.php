@@ -161,10 +161,10 @@ class BetsRest
 
         $page = $request->get('page');
         $size = $request->get('size');
-        // $orderBy = $request->get('orderBy');
+        $orderBy = $request->get('orderBy') ?? 'placed_at DESC';
         // $filter = $request->get('filter');
 
-        $result = $repo->list($page, $size);
+        $result = $repo->list($page, $size, $orderBy);
         $response->write(
             $result
         );
