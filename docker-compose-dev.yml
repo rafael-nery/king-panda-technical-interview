@@ -10,6 +10,7 @@ services:
       - "8080:80"
     volumes:
       - .:/srv/
+      - vendor:/srv/vendor
     environment:
       - APP_ENV=dev
       - PHP_FPM_SERVER=0.0.0.0:9000
@@ -32,6 +33,7 @@ services:
 
 volumes:
   mysql-volume:
+  vendor:
 
 networks:
   net:
