@@ -56,4 +56,12 @@ phpunit.xml
 PROJECT_IMPLEMENTATION_PLAN.md
 TODO
 ignore.txt
-thunder-tests
+thunder-tests# Debug and test files
+public/allenv.php
+public/debug.php
+public/envtest.php
+public/fullinfo.php
+public/info.php
+public/phpini.php
+public/test.php
+public/verbose.php
