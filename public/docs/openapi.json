@@ -519,16 +519,11 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "userId",
                                     "betOddsId",
                                     "stake",
                                     "potentialReturn"
                                 ],
                                 "properties": {
-                                    "userId": {
-                                        "type": "string",
-                                        "format": "string"
-                                    },
                                     "betOddsId": {
                                         "type": "integer",
                                         "format": "int32"
