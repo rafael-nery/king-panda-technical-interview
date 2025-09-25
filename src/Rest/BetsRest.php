@@ -203,10 +203,8 @@ class BetsRest
         description: "The object Bets to be created",
         required: true,
         content: new OA\JsonContent(
-            required: [ "userId", "betOddsId", "stake", "potentialReturn" ],
+            required: [ "betOddsId", "stake", "potentialReturn" ],
             properties: [
-
-                new OA\Property(property: "userId", type: "string", format: "string"),
                 new OA\Property(property: "betOddsId", type: "integer", format: "int32"),
                 new OA\Property(property: "stake", type: "number", format: "double"),
                 new OA\Property(property: "potentialReturn", type: "number", format: "double"),
@@ -234,12 +232,27 @@ class BetsRest
     )]
     public function postBets(HttpResponse $response, HttpRequest $request): void
     {
-        JwtContext::requireRole($request, User::ROLE_ADMIN);
+        // Allow authenticated users to place bets (not just admins)
+        JwtContext::requireAuthenticated($request);
 
         $payload = OpenApiContext::validateRequest($request);
-        
+
         $model = new Bets();
         ObjectCopy::copy($payload, $model);
+
+        // Force the userId from the authenticated user's token (security: users can only create their own bets)
+        $userId = new HexUuidLiteral(JwtContext::getUserId());
+        $model->setUserId($userId);
+
+        // Set default status if not provided
+        if (empty($model->getStatus())) {
+            $model->setStatus('pending');
+        }
+
+        // Set placed_at to now if not provided
+        if (empty($model->getPlacedAt())) {
+            $model->setPlacedAt(date('Y-m-d H:i:s'));
+        }
 
         $betsRepo = Psr11::get(BetsRepository::class);
         $betsRepo->save($model);
@@ -334,7 +347,7 @@ class BetsRest
             new OA\Response(response: 403, description: "Forbidden")
         ]
     )]
-    public function getMyBets(HttpResponse $response, HttpRequest $request): array
+    public function getMyBets(HttpResponse $response, HttpRequest $request): void
     {
         JwtContext::requireAuthenticated($request);
 
@@ -344,7 +357,7 @@ class BetsRest
         $betsRepo = Psr11::get(BetsRepository::class);
         $result = $betsRepo->getByUserId($userId);
 
-        return $result;
+        $response->write($result);
     }
 
 }

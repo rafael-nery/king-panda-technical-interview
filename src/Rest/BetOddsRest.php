@@ -334,14 +334,14 @@ class BetOddsRest
             new OA\Response(response: 403, description: "Forbidden")
         ]
     )]
-    public function getActive(HttpResponse $response, HttpRequest $request): array
+    public function getActive(HttpResponse $response, HttpRequest $request): void
     {
         JwtContext::requireAuthenticated($request);
 
         $betOddsRepo = Psr11::get(BetOddsRepository::class);
         $result = $betOddsRepo->getByStatus('active');
 
-        return $result;
+        $response->write($result);
     }
 
     /**
