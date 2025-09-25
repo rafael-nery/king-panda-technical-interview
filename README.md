@@ -65,7 +65,8 @@ Além do CRUD básico gerado automaticamente, foram implementados:
 ## 🚀 Como Executar
 
 ### Pré-requisitos
-- Docker e Docker Compose instalados
+- Docker Desktop 28.x+ e Docker Compose v2.x+
+- PHP 8.1+ e Composer 2.x+ (para instalar dependências)
 - Git para clonar o repositório
 
 ### 1. Clone o repositório
@@ -74,29 +75,61 @@ git clone https://github.com/rafael-nery/king-panda-technical-interview.git
 cd king-panda-technical-interview
 ```
 
-### 2. Inicie os containers Docker
+### 2. Instale as dependências do projeto
 ```bash
-docker-compose -f docker-compose-dev.yml up -d
+composer install
 ```
 
-### 3. Execute as migrations
+### 3. Inicie os containers Docker com build
 ```bash
-docker-compose -f docker-compose-dev.yml exec rest composer run migrate -- reset
-docker-compose -f docker-compose-dev.yml exec rest composer run migrate
+docker compose -f docker-compose-dev.yml up -d --build
+```
+**Nota**: Se houver problemas de autenticação com Docker Hub, faça login no Docker Desktop primeiro.
+
+### 4. Execute as migrations
+```bash
+docker compose -f docker-compose-dev.yml exec rest composer run migrate -- reset --yes
 ```
 
-### 4. Execute os testes
+### 5. (Opcional) Popule o banco com dados de teste
 ```bash
-docker-compose -f docker-compose-dev.yml exec rest composer run test
+# Inserir cotações de apostas
+docker compose -f docker-compose-dev.yml exec mysql-container mysql -uroot -pmysqlp455w0rd mydb -e "
+INSERT INTO bet_odds (event_name, event_date, market_type, selection, odds, status) VALUES
+('Flamengo vs Palmeiras - Brasileirão', '2025-09-28 16:00:00', 'Resultado Final', 'Flamengo', 2.10, 'active'),
+('Flamengo vs Palmeiras - Brasileirão', '2025-09-28 16:00:00', 'Resultado Final', 'Empate', 3.20, 'active'),
+('Real Madrid vs Barcelona - La Liga', '2025-09-29 11:00:00', 'Resultado Final', 'Real Madrid', 2.25, 'active');"
+
+# Inserir apostas de exemplo para o usuário comum
+docker compose -f docker-compose-dev.yml exec mysql-container mysql -uroot -pmysqlp455w0rd mydb -e "
+INSERT INTO bets (user_id, bet_odds_id, stake, potential_return, status, placed_at) VALUES
+(UNHEX('5F6E7FE7BD1B11ED8CA90242AC120002'), 1, 100.00, 210.00, 'pending', NOW());"
 ```
 
-### 5. Acesse a aplicação
+### 6. Teste a API
+```bash
+# Verificar se está funcionando
+curl http://localhost:8080/sample/ping
+# Resposta esperada: {"result":"pong"}
+```
+
+### 7. Execute os testes automatizados
+```bash
+docker compose -f docker-compose-dev.yml exec rest composer run test
+```
+
+### 8. Acesse a aplicação
 - **API**: http://localhost:8080
 - **Documentação Swagger**: http://localhost:8080/docs
 
 ## 📡 Endpoints Principais
 
 ### Autenticação
+
+**Usuários padrão criados pelas migrations:**
+- **Admin**: admin@example.com / !P4ssw0rdstr!
+- **User comum**: user@example.com / !P4ssw0rdstr!
+
 ```http
 POST /login
 {
@@ -141,6 +174,19 @@ docker-compose -f docker-compose-dev.yml exec rest composer run test
 ```
 
 ## 📈 Estrutura do Banco de Dados
+
+### Acesso ao MySQL
+```bash
+# Via Docker
+docker compose -f docker-compose-dev.yml exec mysql-container mysql -uroot -pmysqlp455w0rd mydb
+
+# Conexão direta
+Host: localhost
+Port: 3306
+Database: mydb
+User: root
+Password: mysqlp455w0rd
+```
 
 ### Tabela `bet_odds`
 ```sql
